@@ -48,11 +48,15 @@
       </div>
       <div style="display: flex; justify-content: end">
         <el-pagination
-            v-model:current-page="mediaParams.page"
+            v-model:current-page="mediaParams.pageNo"
             v-model:page-size="mediaParams.pageSize"
+            :page-sizes="[10, 20, 30]"
+            :pager-count="5"
             :total="mediaData.total"
-            layout="prev, pager, next, jumper"
+            layout="total, sizes, prev, pager, next, jumper"
             small="small"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
         />
       </div>
     </div>
@@ -114,7 +118,7 @@ const mediaData = ref([] as any)
 const currentMedia = ref([] as any)
 
 const mediaParams = ref({
-  page: 1,
+  pageNo: 1,
   pageSize: 10,
   categoryId: null
 })
@@ -204,6 +208,18 @@ const defaultChecked = () => {
     })
   }
 }
+
+// 分页改变
+const handleSizeChange = (val: number) => {
+  mediaParams.value.pageSize = val;
+  getMedia();
+};
+
+// 分页改变
+const handleCurrentChange = (val: number) => {
+  mediaParams.value.pageNo = val;
+  getMedia();
+};
 
 watch(() => props.defaultCheckedIds, () => {
   defaultChecked()
